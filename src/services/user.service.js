@@ -13,20 +13,14 @@ const formatUser = (user) => ({
   createdAt: user.createdAt,
 });
 
-/**
- * Throw a 404 error helper.
- */
+
 const notFound = () => {
   const err = new Error('User not found.');
   err.statusCode = 404;
   throw err;
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Get the currently authenticated user's profile.
- */
 const getMe = async (userId) => {
   const user = await User.findByPk(userId, {
     attributes: { exclude: ['password'] },
@@ -35,9 +29,7 @@ const getMe = async (userId) => {
   return formatUser(user);
 };
 
-/**
- * Get all users (admin only).
- */
+
 const getAllUsers = async () => {
   const users = await User.findAll({
     attributes: { exclude: ['password'] },
@@ -46,9 +38,7 @@ const getAllUsers = async () => {
   return users.map(formatUser);
 };
 
-/**
- * Get a single user by primary key.
- */
+
 const getUserById = async (id) => {
   const user = await User.findByPk(id, {
     attributes: { exclude: ['password'] },
@@ -79,9 +69,7 @@ const updateUser = async (id, { name, email }) => {
   return formatUser(user);
 };
 
-/**
- * Soft-delete a user.
- */
+
 const deleteUser = async (id) => {
   const user = await User.findByPk(id);
   if (!user) notFound();
