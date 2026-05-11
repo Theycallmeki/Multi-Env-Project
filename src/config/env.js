@@ -5,7 +5,6 @@ const dotenv = require('dotenv');
 
 const env = process.env.NODE_ENV || 'development';
 
-// Load environment-specific .env file from project root
 const envFilePath = path.resolve(process.cwd(), `.env.${env}`);
 const result = dotenv.config({ path: envFilePath });
 
@@ -13,7 +12,6 @@ if (result.error) {
   console.warn(`[env] Warning: Could not load ${envFilePath}`);
 }
 
-// ── Required variable validation ─────────────────────────────────────────────
 const REQUIRED = ['PORT', 'NODE_ENV', 'JWT_SECRET', 'DB_HOST', 'DB_NAME'];
 REQUIRED.forEach((key) => {
   if (!process.env[key]) {
@@ -21,7 +19,6 @@ REQUIRED.forEach((key) => {
   }
 });
 
-// ── Export structured config ──────────────────────────────────────────────────
 module.exports = {
   env,
   isProduction: env === 'production',

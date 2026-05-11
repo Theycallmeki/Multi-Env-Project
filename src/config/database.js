@@ -21,15 +21,10 @@ const sequelize = new Sequelize(
   }
 );
 
-/**
- * Test and return the database connection.
- * Called once on server startup.
- */
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
     console.log(`[DB] Connected to "${config.db.name}" on ${config.db.host} (${config.env})`);
-    // Sync models in development only — never in production
     if (config.isDevelopment) {
       await sequelize.sync({ alter: true });
       console.log('[DB] Models synced (development)');

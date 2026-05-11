@@ -3,7 +3,6 @@
 const { User } = require('../models');
 const { sendSuccess, sendError } = require('../utils/response');
 
-// ── GET /api/v1/users/me ──────────────────────────────────────────────────────
 const getMe = async (req, res, next) => {
   try {
     return sendSuccess(res, 200, 'Profile fetched.', req.user);
@@ -12,8 +11,6 @@ const getMe = async (req, res, next) => {
   }
 };
 
-// ── GET /api/v1/users ─────────────────────────────────────────────────────────
-// Admin only
 const getAllUsers = async (req, res, next) => {
   try {
     const users = await User.findAll({
@@ -26,7 +23,6 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-// ── GET /api/v1/users/:id ─────────────────────────────────────────────────────
 const getUserById = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id, {
@@ -39,7 +35,6 @@ const getUserById = async (req, res, next) => {
   }
 };
 
-// ── PUT /api/v1/users/:id ─────────────────────────────────────────────────────
 const updateUser = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
@@ -59,13 +54,12 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-// ── DELETE /api/v1/users/:id ──────────────────────────────────────────────────
 const deleteUser = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
     if (!user) return sendError(res, 404, 'User not found.');
 
-    await user.destroy(); // soft delete (paranoid: true)
+    await user.destroy();
     return sendSuccess(res, 200, 'User deleted successfully.');
   } catch (err) {
     next(err);

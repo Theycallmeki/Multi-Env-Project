@@ -6,9 +6,6 @@ const { User } = require('../models');
 const config = require('../config/env');
 const { sendSuccess, sendError } = require('../utils/response');
 
-/**
- * Generate a signed JWT for a user.
- */
 const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role },
@@ -17,7 +14,6 @@ const generateToken = (user) => {
   );
 };
 
-// ── POST /api/v1/auth/register ────────────────────────────────────────────────
 const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -45,7 +41,6 @@ const register = async (req, res, next) => {
   }
 };
 
-// ── POST /api/v1/auth/login ───────────────────────────────────────────────────
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;

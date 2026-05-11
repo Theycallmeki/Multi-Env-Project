@@ -1,4 +1,3 @@
-// PM2 Ecosystem Config — manages multi-environment deployments
 module.exports = {
   apps: [
     {
@@ -23,7 +22,7 @@ module.exports = {
     {
       name: 'app-production',
       script: './src/server.js',
-      instances: 'max',        // Cluster mode — uses all CPU cores
+      instances: 'max',
       exec_mode: 'cluster',
       watch: false,
       env: {

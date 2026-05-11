@@ -33,7 +33,7 @@ const User = sequelize.define(
   {
     tableName: 'users',
     timestamps: true,
-    paranoid: true, // soft deletes (deletedAt column)
+    paranoid: true,
   }
 );
 

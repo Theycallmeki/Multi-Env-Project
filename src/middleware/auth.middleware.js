@@ -5,9 +5,6 @@ const config = require('../config/env');
 const { sendError } = require('../utils/response');
 const { User } = require('../models');
 
-/**
- * Protect routes — verifies the JWT token from the Authorization header.
- */
 const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -19,7 +16,6 @@ const protect = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, config.jwt.secret);
 
-    // Attach user to request (without password)
     const user = await User.findByPk(decoded.id, {
       attributes: { exclude: ['password'] },
     });
@@ -38,10 +34,6 @@ const protect = async (req, res, next) => {
   }
 };
 
-/**
- * Restrict access to specific roles.
- * Usage: restrictTo('admin')
- */
 const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

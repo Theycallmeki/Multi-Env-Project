@@ -12,13 +12,10 @@ const {
 
 const router = Router();
 
-// All routes below require a valid JWT
 router.use(protect);
 
-// GET /api/v1/users/me  — current logged-in user
 router.get('/me', getMe);
 
-// Admin-only routes
 router.get('/', restrictTo('admin'), getAllUsers);
 router.get('/:id', restrictTo('admin'), getUserById);
 router.put('/:id', restrictTo('admin'), updateUser);

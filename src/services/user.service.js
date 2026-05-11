@@ -2,9 +2,6 @@
 
 const { User } = require('../models');
 
-/**
- * Format a user instance for safe API output (no password).
- */
 const formatUser = (user) => ({
   id: user.id,
   name: user.name,
@@ -13,13 +10,11 @@ const formatUser = (user) => ({
   createdAt: user.createdAt,
 });
 
-
 const notFound = () => {
   const err = new Error('User not found.');
   err.statusCode = 404;
   throw err;
 };
-
 
 const getMe = async (userId) => {
   const user = await User.findByPk(userId, {
@@ -29,7 +24,6 @@ const getMe = async (userId) => {
   return formatUser(user);
 };
 
-
 const getAllUsers = async () => {
   const users = await User.findAll({
     attributes: { exclude: ['password'] },
@@ -37,7 +31,6 @@ const getAllUsers = async () => {
   });
   return users.map(formatUser);
 };
-
 
 const getUserById = async (id) => {
   const user = await User.findByPk(id, {
@@ -47,15 +40,10 @@ const getUserById = async (id) => {
   return formatUser(user);
 };
 
-/**
- * Update a user's name and/or email.
- * @throws {Error} 409 if the new email is already taken by another user
- */
 const updateUser = async (id, { name, email }) => {
   const user = await User.findByPk(id);
   if (!user) notFound();
 
-  // Check email uniqueness if email is being changed
   if (email && email !== user.email) {
     const taken = await User.findOne({ where: { email } });
     if (taken) {
@@ -68,7 +56,6 @@ const updateUser = async (id, { name, email }) => {
   await user.update({ name, email });
   return formatUser(user);
 };
-
 
 const deleteUser = async (id) => {
   const user = await User.findByPk(id);

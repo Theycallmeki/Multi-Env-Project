@@ -7,7 +7,6 @@ const userRoutes = require('./user.routes');
 
 const router = Router();
 
-// ── Health Check ──────────────────────────────────────────────────────────────
 router.get('/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -18,7 +17,6 @@ router.get('/health', (req, res) => {
   });
 });
 
-// ── API v1 Routes ─────────────────────────────────────────────────────────────
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 

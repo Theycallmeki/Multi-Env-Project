@@ -5,11 +5,6 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const config = require('../config/env');
 
-/**
- * Generate a signed JWT for a given user.
- * @param {object} user - Sequelize User instance
- * @returns {string} Signed JWT token
- */
 const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role },
@@ -18,9 +13,6 @@ const generateToken = (user) => {
   );
 };
 
-/**
- * Format a user instance for safe API output (no password).
- */
 const formatUser = (user) => ({
   id: user.id,
   name: user.name,
@@ -29,12 +21,6 @@ const formatUser = (user) => ({
   createdAt: user.createdAt,
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * Register a new user.
- * @throws {Error} 409 if email already exists
- */
 const register = async ({ name, email, password }) => {
   const existing = await User.findOne({ where: { email } });
   if (existing) {
@@ -52,15 +38,9 @@ const register = async ({ name, email, password }) => {
   };
 };
 
-/**
- * Log in an existing user.
- * @throws {Error} 401 if credentials are invalid
- */
 const login = async ({ email, password }) => {
   const user = await User.findOne({ where: { email } });
 
-  // Use the same error message for both "not found" and "wrong password"
-  // to avoid user enumeration attacks
   const invalidErr = new Error('Invalid email or password.');
   invalidErr.statusCode = 401;
 
