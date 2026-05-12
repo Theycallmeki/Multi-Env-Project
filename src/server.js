@@ -9,7 +9,7 @@ const path = require('path');
 
 const config = require('./config/env');
 const { connectDB } = require('./config/database');
-const routes = require('./routes');
+const routes = require('./routes/main.routes');
 const errorMiddleware = require('./middleware/error.middleware');
 
 // ─── Express App Setup ───────────────────────────────────────
