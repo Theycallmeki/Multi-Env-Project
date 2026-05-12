@@ -44,7 +44,8 @@ const getAllUsers = async ({ page = 1, limit = 20, search, role, sortBy = 'creat
 
   const allowedSortFields = ['createdAt', 'name', 'email', 'role'];
   const sanitizedSortBy = allowedSortFields.includes(sortBy) ? sortBy : 'createdAt';
-  const sanitizedOrder = ['ASC', 'DESC'].includes(order.toUpperCase()) ? order.toUpperCase() : 'DESC';
+  const orderUpper = typeof order === 'string' ? order.toUpperCase() : 'DESC';
+  const sanitizedOrder = ['ASC', 'DESC'].includes(orderUpper) ? orderUpper : 'DESC';
 
   const { count, rows } = await User.findAndCountAll({
     where,

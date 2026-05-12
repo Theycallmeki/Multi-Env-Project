@@ -3,8 +3,16 @@
 const errorMiddleware = (err, req, res, next) => {
   const isProduction = process.env.NODE_ENV === 'production';
 
-  const statusCode = err.statusCode || err.status || 500;
-  const message = err.message || 'Internal Server Error';
+  let statusCode = err.statusCode || err.status || 500;
+  let message = err.message || 'Internal Server Error';
+
+  if (err.name === 'SequelizeUniqueConstraintError') {
+    statusCode = 409;
+    message = 'This record conflicts with an existing value (duplicate key).';
+  } else if (err.name === 'SequelizeValidationError' && err.errors?.length) {
+    statusCode = 422;
+    message = err.errors.map((e) => e.message).join(' ');
+  }
 
   console.error(`[Error] ${statusCode} - ${message}${!isProduction ? `\n${err.stack}` : ''}`);
 

@@ -12,7 +12,7 @@ if (result.error) {
   console.warn(`[env] Warning: Could not load ${envFilePath}`);
 }
 
-const REQUIRED = ['PORT', 'NODE_ENV', 'JWT_SECRET', 'DB_HOST', 'DB_NAME'];
+const REQUIRED = ['PORT', 'NODE_ENV', 'JWT_SECRET', 'DB_HOST', 'DB_NAME', 'DB_USER'];
 REQUIRED.forEach((key) => {
   if (!process.env[key]) {
     throw new Error(`[env] Missing required environment variable: "${key}"`);

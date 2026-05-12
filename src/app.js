@@ -13,6 +13,11 @@ const errorMiddleware = require('./middleware/error.middleware');
 
 const app = express();
 
+const trustProxyHops = parseInt(process.env.TRUST_PROXY_HOPS ?? '0', 10);
+if (trustProxyHops > 0) {
+  app.set('trust proxy', trustProxyHops);
+}
+
 app.use(helmet());
 app.use(cors({
   origin: config.app.url,
