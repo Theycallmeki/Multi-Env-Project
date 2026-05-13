@@ -6,9 +6,11 @@ const cors = require('cors');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const compression = require('compression');
+const cookieParser = require('cookie-parser');
 
 const config = require('./config/env');
-const { connectDB } = require('./config/database');
+const { connectDB, sequelize } = require('./config/database');
 const routes = require('./routes/main.routes');
 const errorMiddleware = require('./middleware/error.middleware');
 
@@ -36,6 +38,8 @@ app.use(rateLimit({
   message: { status: 'error', message: 'Too many requests. Please try again later.' },
 }));
 
+app.use(compression());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -70,8 +74,14 @@ const start = async () => {
 
   const shutdown = (signal) => {
     console.log(`\n[Server] ${signal} received. Shutting down gracefully...`);
-    server.close(() => {
+    server.close(async () => {
       console.log('[Server] HTTP server closed.');
+      try {
+        await sequelize.close();
+        console.log('[Server] Database connection closed.');
+      } catch (err) {
+        console.error('[Server] Error closing database connection:', err.message);
+      }
       process.exit(0);
     });
   };
