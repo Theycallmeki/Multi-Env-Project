@@ -13,6 +13,8 @@ const config = require('./config/env');
 const { connectDB, sequelize } = require('./config/database');
 const routes = require('./routes/main.routes');
 const errorMiddleware = require('./middleware/error.middleware');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 // ─── Express App Setup ───────────────────────────────────────
 
@@ -46,6 +48,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan(config.isProduction ? 'combined' : 'dev'));
 
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api/v1', routes);
 
