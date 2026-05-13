@@ -7,13 +7,17 @@ const User = require('../models/user.model');
 
 const protect = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    let token;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return sendError(res, 401, 'No token provided. Authorization denied.');
+    if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+    } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.split(' ')[1];
     }
 
-    const token = authHeader.split(' ')[1];
+    if (!token || token === 'loggedout') {
+      return sendError(res, 401, 'No token provided. Authorization denied.');
+    }
     const decoded = jwt.verify(token, config.jwt.secret);
 
     const user = await User.findByPk(decoded.id, {

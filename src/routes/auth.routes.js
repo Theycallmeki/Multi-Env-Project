@@ -3,7 +3,7 @@
 const { Router } = require('express');
 const validate = require('../middleware/validate.middleware');
 const { registerSchema, loginSchema } = require('../validators/auth.validator');
-const { register, login } = require('../controllers/auth.controller');
+const { register, login, logout } = require('../controllers/auth.controller');
 
 const router = Router();
 
@@ -74,5 +74,17 @@ router.post('/register', validate(registerSchema), register);
  *         description: Invalid credentials
  */
 router.post('/login', validate(loginSchema), login);
+
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Logout user and clear cookies
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ */
+router.post('/logout', logout);
 
 module.exports = router;
