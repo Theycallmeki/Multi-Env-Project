@@ -18,17 +18,12 @@ const swaggerSpec = require('./config/swagger');
 
 const app = express();
 
-// ─── Middleware ──────────────────────────────────────────────
-
-// Trust proxy if behind Nginx/Load Balancer
-const trustProxyHops = parseInt(process.env.TRUST_PROXY_HOPS ?? '0', 10);
-if (trustProxyHops > 0) {
-  app.set('trust proxy', trustProxyHops);
-}
+const trustProxyHops = parseInt(process.env.TRUST_PROXY_HOPS ?? '1', 10);
+app.set('trust proxy', trustProxyHops);
 
 app.use(helmet());
 app.use(cors({
-  origin: config.app.url,
+  origin: process.env.CORS_ORIGIN || '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -48,15 +43,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan(config.isProduction ? 'combined' : 'dev'));
 
-// Static files
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-
-// ─── Routes ──────────────────────────────────────────────────
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1', routes);
 
-// 404 Handler
 app.use((req, res) => {
   res.status(404).json({
     status: 'error',
@@ -64,34 +55,22 @@ app.use((req, res) => {
   });
 });
 
-// Error Handler
 app.use(errorMiddleware);
-
-// ─── Server Startup ──────────────────────────────────────────
 
 const start = async () => {
   try {
     await connectDB();
 
     const server = app.listen(config.app.port, () => {
-      console.log('─────────────────────────────────────────────');
-      console.log(`  🚀 ${config.app.name} is running`);
-      console.log(`  🌍 Environment : ${config.env.toUpperCase()}`);
-      console.log(`  🔗 URL         : ${config.app.url}`);
-      console.log(`  📡 Port        : ${config.app.port}`);
-      console.log('─────────────────────────────────────────────');
+      console.log(`[Server] ${config.app.name} running on ${config.app.port} (${config.env})`);
     });
 
     const gracefulShutdown = (signal) => {
-      console.log(`\n[Server] ${signal} received. Shutting down gracefully...`);
       server.close(async () => {
-        console.log('[Server] HTTP server closed.');
         try {
           await sequelize.close();
-          console.log('[Server] Database connection closed.');
           process.exit(0);
         } catch (err) {
-          console.error('[Server] Error during database shutdown:', err.message);
           process.exit(1);
         }
       });
@@ -101,15 +80,18 @@ const start = async () => {
     process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
     process.on('unhandledRejection', (reason, promise) => {
-      console.error('[Server] Unhandled Rejection at:', promise, 'reason:', reason);
       server.close(() => process.exit(1));
     });
 
+    process.on('uncaughtException', (err) => {
+      process.exit(1);
+    });
+
   } catch (error) {
-    console.error('[Server] Failed to start server:', error.message);
     process.exit(1);
   }
 };
 
 start();
+
 

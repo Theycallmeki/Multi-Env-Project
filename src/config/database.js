@@ -21,18 +21,23 @@ const sequelize = new Sequelize(
   }
 );
 
-const connectDB = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log(`[DB] Connected to "${config.db.name}" on ${config.db.host} (${config.env})`);
-    if (config.isDevelopment) {
-      await sequelize.sync({ alter: true });
-      console.log('[DB] Models synced (development)');
+const connectDB = async (retries = 5) => {
+  while (retries > 0) {
+    try {
+      await sequelize.authenticate();
+      if (config.isDevelopment) {
+        await sequelize.sync({ alter: true });
+      }
+      return;
+    } catch (err) {
+      retries -= 1;
+      if (retries === 0) {
+        process.exit(1);
+      }
+      await new Promise(res => setTimeout(res, 5000));
     }
-  } catch (err) {
-    console.error('[DB] Connection failed:', err.message);
-    process.exit(1);
   }
 };
 
 module.exports = { sequelize, connectDB };
+
