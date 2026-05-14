@@ -3,6 +3,7 @@
 const authService = require('../services/auth.service');
 const { sendSuccess } = require('../utils/response');
 const config = require('../config/env');
+const asyncHandler = require('../utils/asyncHandler');
 
 const setTokenCookie = (res, token) => {
   const cookieOptions = {
@@ -14,26 +15,18 @@ const setTokenCookie = (res, token) => {
   res.cookie('token', token, cookieOptions);
 };
 
-const register = async (req, res, next) => {
-  try {
-    const { name, email, password } = req.body;
-    const { token, user } = await authService.register({ name, email, password });
-    setTokenCookie(res, token);
-    return sendSuccess(res, 201, 'User registered successfully.', { user });
-  } catch (err) {
-    next(err);
-  }
-};
+const register = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+  const { token, user } = await authService.register({ name, email, password });
+  setTokenCookie(res, token);
+  return sendSuccess(res, 201, 'User registered successfully.', { user });
+});
 
-const login = async (req, res, next) => {
-  try {
-    const { token, user } = await authService.login(req.body);
-    setTokenCookie(res, token);
-    return sendSuccess(res, 200, 'Login successful.', { user });
-  } catch (err) {
-    next(err);
-  }
-};
+const login = asyncHandler(async (req, res) => {
+  const { token, user } = await authService.login(req.body);
+  setTokenCookie(res, token);
+  return sendSuccess(res, 200, 'Login successful.', { user });
+});
 
 const logout = (req, res) => {
   res.cookie('token', 'loggedout', {
@@ -46,3 +39,4 @@ const logout = (req, res) => {
 };
 
 module.exports = { register, login, logout };
+

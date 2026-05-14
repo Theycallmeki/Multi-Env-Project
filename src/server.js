@@ -16,10 +16,11 @@ const errorMiddleware = require('./middleware/error.middleware');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 
-// ─── Express App Setup ───────────────────────────────────────
-
 const app = express();
 
+// ─── Middleware ──────────────────────────────────────────────
+
+// Trust proxy if behind Nginx/Load Balancer
 const trustProxyHops = parseInt(process.env.TRUST_PROXY_HOPS ?? '0', 10);
 if (trustProxyHops > 0) {
   app.set('trust proxy', trustProxyHops);
@@ -30,6 +31,7 @@ app.use(cors({
   origin: config.app.url,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
 
 app.use(rateLimit({
@@ -44,59 +46,70 @@ app.use(compression());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(morgan(config.isProduction ? 'combined' : 'dev'));
 
+// Static files
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// ─── Routes ──────────────────────────────────────────────────
 
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1', routes);
 
+// 404 Handler
 app.use((req, res) => {
   res.status(404).json({
     status: 'error',
-    message: `Cannot ${req.method} ${req.originalUrl}`,
+    message: `Route ${req.method} ${req.originalUrl} not found`,
   });
 });
 
+// Error Handler
 app.use(errorMiddleware);
 
-// ─── Server Bootstrap ────────────────────────────────────────
+// ─── Server Startup ──────────────────────────────────────────
 
 const start = async () => {
-  await connectDB();
+  try {
+    await connectDB();
 
-  const server = app.listen(config.app.port, () => {
-    console.log('─────────────────────────────────────────────');
-    console.log(`    ${config.app.name}`);
-    console.log(`    Environment : ${config.env.toUpperCase()}`);
-    console.log(`    Server      : ${config.app.url}`);
-    console.log(`    Port        : ${config.app.port}`);
-    console.log('─────────────────────────────────────────────');
-  });
-
-  const shutdown = (signal) => {
-    console.log(`\n[Server] ${signal} received. Shutting down gracefully...`);
-    server.close(async () => {
-      console.log('[Server] HTTP server closed.');
-      try {
-        await sequelize.close();
-        console.log('[Server] Database connection closed.');
-      } catch (err) {
-        console.error('[Server] Error closing database connection:', err.message);
-      }
-      process.exit(0);
+    const server = app.listen(config.app.port, () => {
+      console.log('─────────────────────────────────────────────');
+      console.log(`  🚀 ${config.app.name} is running`);
+      console.log(`  🌍 Environment : ${config.env.toUpperCase()}`);
+      console.log(`  🔗 URL         : ${config.app.url}`);
+      console.log(`  📡 Port        : ${config.app.port}`);
+      console.log('─────────────────────────────────────────────');
     });
-  };
 
-  process.on('SIGTERM', () => shutdown('SIGTERM'));
-  process.on('SIGINT', () => shutdown('SIGINT'));
+    const gracefulShutdown = (signal) => {
+      console.log(`\n[Server] ${signal} received. Shutting down gracefully...`);
+      server.close(async () => {
+        console.log('[Server] HTTP server closed.');
+        try {
+          await sequelize.close();
+          console.log('[Server] Database connection closed.');
+          process.exit(0);
+        } catch (err) {
+          console.error('[Server] Error during database shutdown:', err.message);
+          process.exit(1);
+        }
+      });
+    };
 
-  process.on('unhandledRejection', (err) => {
-    console.error('[Server] Unhandled Rejection:', err.message);
-    server.close(() => process.exit(1));
-  });
+    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('[Server] Unhandled Rejection at:', promise, 'reason:', reason);
+      server.close(() => process.exit(1));
+    });
+
+  } catch (error) {
+    console.error('[Server] Failed to start server:', error.message);
+    process.exit(1);
+  }
 };
 
 start();
+
