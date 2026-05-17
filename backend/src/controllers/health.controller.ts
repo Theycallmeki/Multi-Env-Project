@@ -1,8 +1,6 @@
-'use strict';
-
-const config = require('../config/env');
-const { sequelize } = require('../config/database');
-const asyncHandler = require('../utils/asyncHandler');
+import config from "../config/env";
+import {  sequelize  } from "../config/database";
+import asyncHandler from "../utils/asyncHandler";
 
 /**
  * @desc    Health check endpoint to verify server and database status
@@ -45,4 +43,4 @@ const getHealth = asyncHandler(async (req, res) => {
   res.status(httpStatus).json(healthStatus);
 });
 
-module.exports = { getHealth };
+export {  getHealth  };

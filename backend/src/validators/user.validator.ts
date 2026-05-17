@@ -1,6 +1,4 @@
-'use strict';
-
-const Joi = require('joi');
+import Joi from "joi";
 
 const createUserSchema = Joi.object({
   name: Joi.string().trim().min(2).max(60).required().messages({
@@ -80,11 +78,11 @@ const paramIdSchema = Joi.object({
   }),
 });
 
-module.exports = {
+export { 
   createUserSchema,
   updateMeSchema,
   changePasswordSchema,
   updateUserSchema,
   userQuerySchema,
   paramIdSchema,
-};
+ };

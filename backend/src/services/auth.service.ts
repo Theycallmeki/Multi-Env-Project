@@ -1,9 +1,7 @@
-'use strict';
-
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user.model');
-const config = require('../config/env');
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/user.model";
+import config from "../config/env";
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -55,4 +53,4 @@ const login = async ({ email, password }) => {
   };
 };
 
-module.exports = { register, login };
+export {  register, login  };

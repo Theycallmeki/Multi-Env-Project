@@ -1,7 +1,5 @@
-'use strict';
-
-const winston = require('winston');
-const config = require('../config/env');
+import winston from "winston";
+import config from "../config/env";
 
 const formats = [
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' })
@@ -26,4 +24,4 @@ const logger = winston.createLogger({
   ]
 });
 
-module.exports = logger;
+export default logger;

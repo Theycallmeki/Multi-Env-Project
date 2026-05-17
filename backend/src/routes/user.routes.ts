@@ -1,17 +1,15 @@
-'use strict';
-
-const { Router } = require('express');
-const { protect, restrictTo } = require('../middleware/auth.middleware');
-const validate = require('../middleware/validate.middleware');
-const {
+import {  Router  } from "express";
+import {  protect, restrictTo  } from "../middleware/auth.middleware";
+import validate from "../middleware/validate.middleware";
+import { 
   createUserSchema,
   updateMeSchema,
   changePasswordSchema,
   updateUserSchema,
   userQuerySchema,
   paramIdSchema,
-} = require('../validators/user.validator');
-const {
+ } from "../validators/user.validator";
+import { 
   getMe,
   updateMe,
   changePassword,
@@ -20,7 +18,7 @@ const {
   createUser,
   updateUser,
   deleteUser,
-} = require('../controllers/user.controller');
+ } from "../controllers/user.controller";
 
 const router = Router();
 
@@ -189,5 +187,5 @@ router.patch('/:id', restrictTo('admin'), validate(paramIdSchema, 'params'), val
  */
 router.delete('/:id', restrictTo('admin'), validate(paramIdSchema, 'params'), deleteUser);
 
-module.exports = router;
+export default router;
 

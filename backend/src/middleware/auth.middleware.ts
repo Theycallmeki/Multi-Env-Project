@@ -1,9 +1,7 @@
-'use strict';
-
-const jwt = require('jsonwebtoken');
-const config = require('../config/env');
-const { sendError } = require('../utils/response');
-const User = require('../models/user.model');
+import jwt from "jsonwebtoken";
+import config from "../config/env";
+import {  sendError  } from "../utils/response";
+import User from "../models/user.model";
 
 const protect = async (req, res, next) => {
   try {
@@ -47,4 +45,4 @@ const restrictTo = (...roles) => {
   };
 };
 
-module.exports = { protect, restrictTo };
+export {  protect, restrictTo  };

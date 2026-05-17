@@ -1,6 +1,4 @@
-'use strict';
-
-const Joi = require('joi');
+import Joi from "joi";
 
 const registerSchema = Joi.object({
   name: Joi.string().trim().min(2).max(60).required().messages({
@@ -33,4 +31,4 @@ const loginSchema = Joi.object({
   }),
 });
 
-module.exports = { registerSchema, loginSchema };
+export {  registerSchema, loginSchema  };

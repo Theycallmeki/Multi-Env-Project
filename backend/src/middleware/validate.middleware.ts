@@ -1,6 +1,4 @@
-'use strict';
-
-const { sendError } = require('../utils/response');
+import {  sendError  } from "../utils/response";
 
 const validate = (schema, source = 'body') => {
   return (req, res, next) => {
@@ -22,4 +20,4 @@ const validate = (schema, source = 'body') => {
   };
 };
 
-module.exports = validate;
+export default validate;

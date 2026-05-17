@@ -1,9 +1,7 @@
-'use strict';
-
-const { Router } = require('express');
-const validate = require('../middleware/validate.middleware');
-const { registerSchema, loginSchema } = require('../validators/auth.validator');
-const { register, login, logout } = require('../controllers/auth.controller');
+import {  Router  } from "express";
+import validate from "../middleware/validate.middleware";
+import {  registerSchema, loginSchema  } from "../validators/auth.validator";
+import {  register, login, logout  } from "../controllers/auth.controller";
 
 const router = Router();
 
@@ -87,4 +85,4 @@ router.post('/login', validate(loginSchema), login);
  */
 router.post('/logout', logout);
 
-module.exports = router;
+export default router;

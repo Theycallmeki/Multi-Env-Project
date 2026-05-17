@@ -1,8 +1,6 @@
-'use strict';
-
-const { Sequelize } = require('sequelize');
-const config = require('./env');
-const logger = require('../utils/logger');
+import {  Sequelize  } from "sequelize";
+import config from "./env";
+import logger from "../utils/logger";
 
 const sequelize = new Sequelize(
   config.db.name,
@@ -40,5 +38,5 @@ const connectDB = async (retries = 5) => {
   }
 };
 
-module.exports = { sequelize, connectDB };
+export {  sequelize, connectDB  };
 

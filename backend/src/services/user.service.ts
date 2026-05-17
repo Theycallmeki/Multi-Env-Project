@@ -1,8 +1,6 @@
-'use strict';
-
-const bcrypt = require('bcryptjs');
-const User = require('../models/user.model');
-const { Op } = require('sequelize');
+import bcrypt from "bcryptjs";
+import User from "../models/user.model";
+import {  Op  } from "sequelize";
 
 const formatUser = (user) => ({
   id: user.id,
@@ -151,4 +149,4 @@ const deleteUser = async (id) => {
   await user.destroy();
 };
 
-module.exports = { getMe, getAllUsers, getUserById, createUser, updateUser, updateMe, changePassword, deleteUser };
+export {  getMe, getAllUsers, getUserById, createUser, updateUser, updateMe, changePassword, deleteUser  };

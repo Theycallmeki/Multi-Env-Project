@@ -1,9 +1,7 @@
-'use strict';
-
-const authService = require('../services/auth.service');
-const { sendSuccess } = require('../utils/response');
-const config = require('../config/env');
-const asyncHandler = require('../utils/asyncHandler');
+import authService from "../services/auth.service";
+import {  sendSuccess  } from "../utils/response";
+import config from "../config/env";
+import asyncHandler from "../utils/asyncHandler";
 
 const setTokenCookie = (res, token) => {
   const cookieOptions = {
@@ -38,5 +36,5 @@ const logout = (req, res) => {
   return sendSuccess(res, 200, 'Logout successful.');
 };
 
-module.exports = { register, login, logout };
+export {  register, login, logout  };
 

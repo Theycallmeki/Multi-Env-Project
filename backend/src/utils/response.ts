@@ -1,5 +1,3 @@
-'use strict';
-
 const sendSuccess = (res, statusCode = 200, message = 'Success', data = null) => {
   const response = { status: 'success', message };
   if (data !== null) response.data = data;
@@ -12,4 +10,4 @@ const sendError = (res, statusCode = 500, message = 'Something went wrong', erro
   return res.status(statusCode).json(response);
 };
 
-module.exports = { sendSuccess, sendError };
+export {  sendSuccess, sendError  };

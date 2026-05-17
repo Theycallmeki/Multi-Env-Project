@@ -1,6 +1,4 @@
-'use strict';
-
-const logger = require('../utils/logger');
+import logger from "../utils/logger";
 
 const errorMiddleware = (err, req, res, next) => {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -25,4 +23,4 @@ const errorMiddleware = (err, req, res, next) => {
   });
 };
 
-module.exports = errorMiddleware;
+export default errorMiddleware;

@@ -1,8 +1,6 @@
-'use strict';
-
-const userService = require('../services/user.service');
-const { sendSuccess } = require('../utils/response');
-const asyncHandler = require('../utils/asyncHandler');
+import userService from "../services/user.service";
+import {  sendSuccess  } from "../utils/response";
+import asyncHandler from "../utils/asyncHandler";
 
 const getMe = asyncHandler(async (req, res) => {
   const user = await userService.getMe(req.user.id);
@@ -54,7 +52,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   return sendSuccess(res, 200, 'User deleted successfully.');
 });
 
-module.exports = {
+export { 
   getMe,
   updateMe,
   changePassword,
@@ -63,5 +61,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-};
+ };
 

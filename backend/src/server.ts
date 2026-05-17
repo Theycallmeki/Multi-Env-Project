@@ -1,21 +1,19 @@
-'use strict';
+import express from "express";
+import helmet from "helmet";
+import cors from "cors";
+import morgan from "morgan";
+import rateLimit from "express-rate-limit";
+import path from "path";
+import compression from "compression";
+import cookieParser from "cookie-parser";
 
-const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
-const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
-const path = require('path');
-const compression = require('compression');
-const cookieParser = require('cookie-parser');
-
-const config = require('./config/env');
-const { connectDB, sequelize } = require('./config/database');
-const routes = require('./routes/main.routes');
-const errorMiddleware = require('./middleware/error.middleware');
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger');
-const logger = require('./utils/logger');
+import config from "./config/env";
+import {  connectDB, sequelize  } from "./config/database";
+import routes from "./routes/main.routes";
+import errorMiddleware from "./middleware/error.middleware";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger";
+import logger from "./utils/logger";
 
 const app = express();
 
@@ -101,4 +99,4 @@ if (require.main === module) {
   start();
 }
 
-module.exports = app;
+export default app;
