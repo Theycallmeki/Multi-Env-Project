@@ -15,6 +15,7 @@ const routes = require('./routes/main.routes');
 const errorMiddleware = require('./middleware/error.middleware');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
+const logger = require('./utils/logger');
 
 const app = express();
 
@@ -41,7 +42,11 @@ app.use(compression());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan(config.isProduction ? 'combined' : 'dev'));
+app.use(morgan(config.isProduction ? 'combined' : 'dev', {
+  stream: {
+    write: (message) => logger.info(message.trim())
+  }
+}));
 
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
@@ -62,7 +67,7 @@ const start = async () => {
     await connectDB();
 
     const server = app.listen(config.app.port, () => {
-      console.log(`[Server] ${config.app.name} running on ${config.app.port} (${config.env})`);
+      logger.info(`[Server] ${config.app.name} running on ${config.app.port} (${config.env})`);
     });
 
     const gracefulShutdown = (signal) => {

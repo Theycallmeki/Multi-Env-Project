@@ -2,6 +2,7 @@
 
 const { Sequelize } = require('sequelize');
 const config = require('./env');
+const logger = require('../utils/logger');
 
 const sequelize = new Sequelize(
   config.db.name,
@@ -11,7 +12,7 @@ const sequelize = new Sequelize(
     host: config.db.host,
     port: config.db.port,
     dialect: 'postgres',
-    logging: config.isDevelopment ? console.log : false,
+    logging: config.isDevelopment ? (msg) => logger.info(msg) : false,
     pool: {
       max: config.isProduction ? 10 : 5,
       min: 0,

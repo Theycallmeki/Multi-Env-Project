@@ -1,5 +1,7 @@
 'use strict';
 
+const logger = require('../utils/logger');
+
 const errorMiddleware = (err, req, res, next) => {
   const isProduction = process.env.NODE_ENV === 'production';
 
@@ -14,7 +16,7 @@ const errorMiddleware = (err, req, res, next) => {
     message = err.errors.map((e) => e.message).join(' ');
   }
 
-  console.error(`[Error] ${statusCode} - ${message}${!isProduction ? `\n${err.stack}` : ''}`);
+  logger.error(`[Error] ${statusCode} - ${message}`, { stack: err.stack });
 
   res.status(statusCode).json({
     status: 'error',
