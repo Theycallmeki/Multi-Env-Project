@@ -10,7 +10,7 @@ if (result.error) {
   console.warn(`[env] Warning: Could not load ${envFilePath}`);
 }
 
-const REQUIRED = ['PORT', 'NODE_ENV', 'JWT_SECRET', 'DB_HOST', 'DB_NAME', 'DB_USER'];
+const REQUIRED = ['PORT', 'NODE_ENV', 'JWT_SECRET', 'DATABASE_URL'];
 REQUIRED.forEach((key) => {
   if (!process.env[key]) {
     throw new Error(`[env] Missing required environment variable: "${key}"`);
@@ -30,11 +30,7 @@ module.exports = {
   },
 
   db: {
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT, 10) || 5432,
-    name: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    pass: process.env.DB_PASS,
+    url: process.env.DATABASE_URL,
   },
 
   jwt: {

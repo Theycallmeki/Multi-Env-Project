@@ -3,12 +3,8 @@ import config from "./env";
 import logger from "../utils/logger";
 
 const sequelize = new Sequelize(
-  config.db.name,
-  config.db.user,
-  config.db.pass,
+  config.db.url,
   {
-    host: config.db.host,
-    port: config.db.port,
     dialect: 'postgres',
     logging: config.isDevelopment ? (msg) => logger.info(msg) : false,
     pool: {
