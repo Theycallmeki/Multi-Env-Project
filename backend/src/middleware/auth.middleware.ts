@@ -16,7 +16,7 @@ const protect = async (req, res, next) => {
     if (!token || token === 'loggedout') {
       return sendError(res, 401, 'No token provided. Authorization denied.');
     }
-    const decoded = jwt.verify(token, config.jwt.secret);
+    const decoded = jwt.verify(token, config.jwt.secret) as jwt.JwtPayload;
 
     const user = await User.findByPk(decoded.id, {
       attributes: { exclude: ['password'] },

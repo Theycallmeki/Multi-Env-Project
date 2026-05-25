@@ -1,4 +1,4 @@
-import authService from "../services/auth.service";
+import * as authService from "../services/auth.service";
 import {  sendSuccess  } from "../utils/response";
 import config from "../config/env";
 import asyncHandler from "../utils/asyncHandler";

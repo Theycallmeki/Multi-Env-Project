@@ -8,7 +8,16 @@ import asyncHandler from "../utils/asyncHandler";
  * @access  Public
  */
 const getHealth = asyncHandler(async (req, res) => {
-  const healthStatus = {
+  const healthStatus: {
+    status: string;
+    environment: string;
+    app: string;
+    timestamp: string;
+    uptime: string;
+    database: string;
+    memoryUsage: Record<string, any>;
+    error?: string;
+  } = {
     status: 'ok',
     environment: config.env,
     app: config.app.name,

@@ -1,4 +1,4 @@
-import userService from "../services/user.service";
+import * as userService from "../services/user.service";
 import {  sendSuccess  } from "../utils/response";
 import asyncHandler from "../utils/asyncHandler";
 
