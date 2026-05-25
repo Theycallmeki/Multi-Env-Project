@@ -17,7 +17,7 @@ REQUIRED.forEach((key) => {
   }
 });
 
-module.exports = {
+export default {
   env,
   isProduction: env === 'production',
   isStaging: env === 'staging',
