@@ -22,10 +22,6 @@ out/
 .env
 .env.*
 !.env.example
-!.env.development
-!.env.production
-!.env.staging
-!.env.test
 
 # IDE / Editor
 .vscode/
